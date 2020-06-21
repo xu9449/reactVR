@@ -1,12 +1,32 @@
 import React, {Component} from 'react';
 import{ View, Text, Pano, AppRegistry, asset, StyleSheet} from 'react-vr';
 
+const places =
+  [
+    {
+      title: 'Snow Mountain',
+      image: 'snow-mountain.jpg'
+    },
+    {
+      title: 'The Room',
+      image: 'room.jpg'
+
+    },
+    {
+      title: 'Village',
+      image: 'village.jpg'
+
+    }
+  ]
+
+
 class WorldTour extends Component{
   constructor(){
     super();
 
     this.state = {
-      showMenu: false
+      showMenu: false,
+      place: 'snow-mountain.jpg'
     }
   }
 
@@ -16,7 +36,7 @@ class WorldTour extends Component{
   render(){
     return (
       <View>
-        <Pano source = {asset('moon.jpg')}></Pano>
+        <Pano source = {asset(this.state.place)}></Pano>
         <View
             style={styles.menuButton}
             onEnter={()=> this.toggleMenu()}
@@ -27,8 +47,20 @@ class WorldTour extends Component{
         </View>
         {
           this.state.showMenu?
-            <View>
-              <Text>Menu</Text>
+            <View style = {styles.menu}>
+              {
+                places.map((place,index) => {
+                  return(
+                    <View
+                    style={styles.menuItem}
+                    key = {index}
+                    onEnter= {() => this.setState({place: place.image})}
+                    >
+                      <Text style = {styles.menuItemText}>{place.title}</Text>
+                    </View>
+                  )
+                })
+              }
             </View>
           :
             <View></View>
@@ -39,6 +71,16 @@ class WorldTour extends Component{
 };
 
 const styles = StyleSheet.create({
+  menu: {
+    width: 5,
+    height: 1.25,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+    transform: [
+      {translate: [-2, 0, -7.5]}
+    ]
+  },
   menuButton: {
     backgroundColor: '#fff',
     borderRadius: 0.25,
@@ -48,13 +90,27 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderWidth: 0.01,
     transform: [
-      {translate: [-1, 0, -5]}
+      {translate: [0, 0, -5]}
     ]
   },
   menuButtonText: {
     textAlign: 'center',
     fontSize: 0.15,
     color: '#000'
+  },
+  menuItem:{
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 1,
+    height: 1,
+    borderRadius: 0.5,
+    borderWidth: 0.02,
+    backgroundColor: '#fff'
+  },
+  menuItemText:{
+    fontSize: 0.2,
+    textAlign: 'center',
+    color:'#000'
   }
 })
 AppRegistry.registerComponent('WorldTour', () => WorldTour);
